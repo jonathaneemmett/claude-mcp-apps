@@ -10,22 +10,23 @@ from starlette.routing import Route
 
 from artifact_server.settings import settings
 from artifact_server.tools.chart import ChartToolHandler
-from artifact_server.tools.diagram import DiagramToolHandler
 from artifact_server.tools.html import HtmlToolHandler
 from artifact_server.tools.table import TableToolHandler
-from artifact_server.views import CHART_VIEW, DIAGRAM_VIEW, HTML_VIEW, TABLE_VIEW
+from artifact_server.views import CHART_VIEW, HTML_VIEW, TABLE_VIEW
 
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 logger = logging.getLogger(__name__)
 
 CDN_DOMAINS = ["https://unpkg.com", "https://cdn.jsdelivr.net"]
 
-mcp = FastMCP("artifact-server")
+mcp = FastMCP(
+    "artifact-server",
+    transport_security={"allowed_hosts": ["localhost:3003", "mcp-server:3003"]},
+)
 
 # Register tool handlers
 ChartToolHandler().register(mcp)
 TableToolHandler().register(mcp)
-DiagramToolHandler().register(mcp)
 HtmlToolHandler().register(mcp)
 
 
@@ -47,14 +48,6 @@ def chart_view() -> str:
 def table_view() -> str:
     return TABLE_VIEW
 
-
-@mcp.resource(
-    "ui://artifact-server/diagram.html",
-    mime_type="text/html;profile=mcp-app",
-    meta={"ui": {"csp": {"resourceDomains": CDN_DOMAINS}}},
-)
-def diagram_view() -> str:
-    return DIAGRAM_VIEW
 
 
 @mcp.resource(

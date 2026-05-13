@@ -1,0 +1,13 @@
+# Dev overrides — use `docker compose up` to get HMR + volume mounts
+services:
+    mcp-frontend:
+        build:
+            context: ./mcp-frontend
+            target: deps
+        command: yarn dev
+        volumes:
+            - ./mcp-frontend/src:/app/src
+            - ./mcp-frontend/public:/app/public
+            - ./mcp-frontend/next.config.ts:/app/next.config.ts
+            - ./mcp-frontend/tsconfig.json:/app/tsconfig.json
+            - ./mcp-frontend/postcss.config.mjs:/app/postcss.config.mjs

@@ -1,6 +1,7 @@
 # Environment
 .env
 .env.local
+.env.conductor
 
 # Python
 __pycache__/
@@ -23,4 +24,4 @@ out/
 
 # Project
 CLAUDE.md
-PLAN.md
+**/PLAN.md

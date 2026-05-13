@@ -1,0 +1,25 @@
+# docker-compose.yml
+services:
+    mcp-server:
+        build: ./mcp-server
+        ports:
+            - '3003:3003'
+        volumes:
+            - ./mcp-server/artifact_server:/app/artifact_server
+        healthcheck:
+            test: ['CMD', 'python', '-c', 'import urllib.request; urllib.request.urlopen("http://localhost:3003/health")']
+            interval: 5s
+            retries: 3
+
+    mcp-frontend:
+        build: ./mcp-frontend
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./mcp-frontend/src:/app/src
+        environment:
+            - MCP_SERVER_URL=http://mcp-server:3003/mcp
+            - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+        depends_on:
+            mcp-server:
+                condition: service_healthy

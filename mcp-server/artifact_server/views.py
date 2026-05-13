@@ -165,40 +165,6 @@ TABLE_VIEW = """<!DOCTYPE html>
 </body>
 </html>"""
 
-DIAGRAM_VIEW = """<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="color-scheme" content="light dark">
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
-  <style>""" + SHADCN_STYLES + """</style>
-</head>
-<body>
-  <div class="card">
-    <div id="title-area"></div>
-    <div style="display:flex;justify-content:center"><pre class="mermaid" id="diagram"></pre></div>
-  </div>
-  <script type="module">
-    import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
-    const app = new App({ name: "Artifact Diagram", version: "1.0.0" });
-    app.ontoolresult = ({ content }) => {
-      const text = content?.find(c => c.type === 'text')?.text;
-      if (!text) return;
-      const config = JSON.parse(text);
-      if (config.title) {
-        document.getElementById('title-area').innerHTML = '<div class="card-header"><h1 class="card-title">' + config.title + '</h1>' +
-          (config.subtitle ? '<p class="card-description">' + config.subtitle + '</p>' : '') + '</div>';
-      }
-      document.getElementById('diagram').textContent = config.mermaid;
-      mermaid.initialize({ startOnLoad: true, theme: 'default' });
-      mermaid.run().then(() => {
-        document.documentElement.style.height = document.body.scrollHeight + 'px';
-      });
-    };
-    await app.connect();
-  </script>
-</body>
-</html>"""
 
 HTML_VIEW = """<!DOCTYPE html>
 <html>
